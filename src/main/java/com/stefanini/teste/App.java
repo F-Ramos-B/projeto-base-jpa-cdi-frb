@@ -1,19 +1,25 @@
 package com.stefanini.teste;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.inject.Inject;
 
+import com.stefanini.dto.FiltroPessoaDTO;
+import com.stefanini.model.Endereco;
 import com.stefanini.model.Pessoa;
+import com.stefanini.servico.EnderecoServico;
 import com.stefanini.servico.PessoaServico;
 
 public class App {
 
 	@Inject
-	private PessoaServico servico;
+	private PessoaServico pessoaServico;
+	@Inject
+	private EnderecoServico enderecoServico;
 
 	public static void main(String[] args) {
 		// CONFIGURACAO PARA INICIAR O CONTAINER PARA GERENCIAMENTO DO CDI
@@ -25,41 +31,54 @@ public class App {
 	}
 
 	public void executar() {
-		buscarTodos();
+//		buscarTodos();
+		buscarPessoaFiltro();
 //		encontrar();
 //		salvar();
+//		salvarEndereco();
 //		remover();
+		System.out.println("=======================");
 	}
-	
-	
+
 	private void remover() {
-		servico.remover(5L);
+		pessoaServico.remover(5L);
 	}
 
 	private void encontrar() {
-		Optional<Pessoa> pessoa = servico.encontrar(5L);
-		if (pessoa.isPresent()) {
-			System.out.println("Pessoa encontrada");
-			System.out.println(pessoa.get());
-		} else {
-			System.out.println("Pessoa não encontrada");
-		}
+		Optional<Pessoa> pessoa = pessoaServico.encontrar(1L);
+		System.out.println("=======================");
+		System.out.println(pessoa.isPresent() ? pessoa.get() : "Pessoa não encontrada");
 	}
 
 	private void buscarTodos() {
-		servico.getList().ifPresent(i -> {
-			i.forEach(b -> {
-				System.out.println(b);
+		pessoaServico.getList().ifPresent(conteudo -> {
+			System.out.println("=======================");
+			conteudo.forEach(cadaPessoa -> {
+				System.out.println(cadaPessoa);
+				System.out.println("----");
 			});
 		});
-//		System.out.println();
+	}
+
+	private void buscarPessoaFiltro() {
+		pessoaServico.getList(new FiltroPessoaDTO(null, "joa%", null, null))
+			.ifPresent(lista -> lista.forEach(System.out::println));
 	}
 
 	public void salvar() {
 
-//		Pessoa pessoa = new Pessoa("JOAO", LocalDate.of(1995, 8, 24));
-//		pessoa.setEmail("joaom.dev@hotmail.com");
-//		servico.salvar(pessoa);
+		Pessoa pessoa = new Pessoa("ELIAS", "elias.dev@hotmail.com", LocalDate.of(1996, 8, 24), true);
+		pessoaServico.salvar(pessoa);
+
+	}
+
+	public void salvarEndereco() {
+//		Pessoa pessoa = new Pessoa();
+//		pessoa.setId(1L);
+//		Optional<Pessoa> pessoaPegada = pessoaServico.encontrar(1L);
+		Endereco endereco = new Endereco(pessoaServico.encontrar(1L).get(), "SQSW 173", "AP381", "Cruz", "Brasília",
+				"DF", "70670420");
+		enderecoServico.salvar(endereco);
 
 	}
 
