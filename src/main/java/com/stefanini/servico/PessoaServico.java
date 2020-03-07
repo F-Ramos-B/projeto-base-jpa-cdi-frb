@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.stefanini.dao.PessoaDAO;
+import com.stefanini.dto.FiltroEnderecoDTO;
 import com.stefanini.dto.FiltroPessoaDTO;
 import com.stefanini.model.Pessoa;
 import com.stefanini.util.IGenericService;
@@ -54,8 +56,8 @@ public class PessoaServico implements IGenericService<Pessoa, Long> {
 		return dao.getList();
 	}
 
-	public Optional<List<Pessoa>> getList(FiltroPessoaDTO filtro) {
-		return dao.getList(filtro);
+	public Optional<List<Pessoa>> getList(@NotNull FiltroPessoaDTO filtro, @NotNull FiltroEnderecoDTO filtroEndereco) {
+		return dao.getList(filtro, filtroEndereco);
 	}
 
 	/**

@@ -8,6 +8,7 @@ import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.inject.Inject;
 
+import com.stefanini.dto.FiltroEnderecoDTO;
 import com.stefanini.dto.FiltroPessoaDTO;
 import com.stefanini.model.Endereco;
 import com.stefanini.model.Pessoa;
@@ -61,8 +62,10 @@ public class App {
 	}
 
 	private void buscarPessoaFiltro() {
-		pessoaServico.getList(new FiltroPessoaDTO(null, "joa%", null, null))
-			.ifPresent(lista -> lista.forEach(System.out::println));
+		Optional<List<Pessoa>> list = pessoaServico.getList(
+				new FiltroPessoaDTO("JOAO", null, null, null),
+				new FiltroEnderecoDTO("SDQAWSAD", null, null, null, null, null));
+			list.ifPresent(lista -> lista.forEach(System.out::println));
 	}
 
 	public void salvar() {
